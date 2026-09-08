@@ -92,3 +92,41 @@ def criar_imovel():
         "id": imovel_id
     }), 201
 
+@app.route("/imoveis/<int:imoveis_id>", methods=["PUT"])
+def atualiza_imovel(imoveis_id):
+    dados = request.get_json(silent = True)
+    if not dados:
+        return jsonify({
+            "erro": "Campos obrigatórios: name, email, phone"
+        }), 400
+
+    logradouro = dados.get("logradouro")
+    tipo_logradouro = dados.get("tipo_logradouro")
+    bairro = dados.get("bairro")
+    cidade = dados.get("cidade")
+    cep = dados.get("cep")
+    tipo = dados.get("tipo")
+    valor = dados.get("valor")
+    data_aquisicao = dados.get("data_aquisicao")
+
+    if not logradouro or not tipo_logradouro or not bairro or not cidade or not cep or not tipo or not valor or not data_aquisicao:
+            return jsonify({
+                        "erro": "Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao"
+                    }), 400
+
+    conexao = get_connection()
+    cursor = conexao.cursor()
+    cursor.execute("UPDATE imoveis SET logradouro = ?, tipo_logradouro = ?, bairro = ?, cidade = ?, cep = ?, tipo = ?, valor = ?, data_aquisicao = ? WHERE id = ?", (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao, imoveis_id,))
+    linhas_alteradas = cursor.rowcount
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+    if linhas_alteradas == 0:
+        return jsonify({
+            "erro": "Imóvel não encontrado"
+        }), 404
+
+    return jsonify({
+        "mensagem": "Imóvel atualizado com sucesso"
+    }), 200
