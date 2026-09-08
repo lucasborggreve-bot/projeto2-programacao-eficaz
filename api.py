@@ -45,7 +45,7 @@ def listar_imoveis():
 def listar_imovel(imoveis_id):
     conexao = get_connection()
     cursor = conexao.cursor()
-    cursor.execute("SELECT * FROM imoveis WHERE id = ?",(imoveis_id,))
+    cursor.execute("SELECT * FROM imoveis WHERE id = %s",(imoveis_id,))
     imovel = cursor.fetchone()
     if imovel is None:
         cursor.close()
@@ -83,7 +83,7 @@ def criar_imovel():
 
     conexao = get_connection()
     cursor = conexao.cursor()
-    cursor.execute("INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (logradouro,tipo_logradouro,bairro,cidade,cep,tipo,valor,data_aquisicao,))
+    cursor.execute("INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (logradouro,tipo_logradouro,bairro,cidade,cep,tipo,valor,data_aquisicao,))
     conexao.commit()
     imovel_id = cursor.lastrowid
     cursor.close()
@@ -116,7 +116,7 @@ def atualiza_imovel(imoveis_id):
 
     conexao = get_connection()
     cursor = conexao.cursor()
-    cursor.execute("UPDATE imoveis SET logradouro = ?, tipo_logradouro = ?, bairro = ?, cidade = ?, cep = ?, tipo = ?, valor = ?, data_aquisicao = ? WHERE id = ?", (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao, imoveis_id,))
+    cursor.execute("UPDATE imoveis SET logradouro = %s, tipo_logradouro = %s, bairro = %s, cidade = %s, cep = %s, tipo = %s, valor = %s, data_aquisicao = %s WHERE id = %s", (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao, imoveis_id,))
     linhas_alteradas = cursor.rowcount
     conexao.commit()
     cursor.close()
