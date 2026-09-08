@@ -8,7 +8,7 @@ def client():
     with app.test_client() as client:
         yield client
 
-@patch('api.listar_imoveis')
+@patch('api.get_connection')
 def test_listar_imoveis(mock_conentar_banco, client):
     mock_conn = MagicMock()
     mock_cursor = MagicMock()
