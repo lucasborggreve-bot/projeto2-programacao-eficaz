@@ -83,7 +83,7 @@ def criar_imovel():
 
     conexao = get_connection()
     cursor = conexao.cursor()
-    cursor.execute("INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) values (?, ?, ?, ?, ?, ?, ?, ?)", (logradouro,tipo_logradouro,bairro,cidade,cep,tipo,valor,data_aquisicao,))
+    cursor.execute("INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (logradouro,tipo_logradouro,bairro,cidade,cep,tipo,valor,data_aquisicao,))
     conexao.commit()
     imovel_id = cursor.lastrowid
     cursor.close()
@@ -91,3 +91,4 @@ def criar_imovel():
     return jsonify({
         "id": imovel_id
     }), 201
+
