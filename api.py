@@ -59,3 +59,37 @@ def listar_imovel(imoveis_id):
     cursor.close()
     return jsonify(lista_imovel), 200
     
+@app.route("/imoveis", methods=["POST"])
+def criar_imovel():
+    dados = request.get_json(silent=True)
+    if not dados:
+        return jsonify({
+            "erro": "Campos obrigatórios: id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao"
+        }), 400
+
+    id = dados.get("id")
+    logradouro = dados.get("logradouro")
+    tipo_logradouro = dados.get("tipo_logradouro")
+    bairro = dados.get("bairro")
+    cidade = dados.get("cidade")
+    cep = dados.get("cep")
+    tipo = dados.get("tipo")
+    valor = dados.get("valor")
+    data_aquisicao = dados.get("data_aquisicao")
+
+    if not id or not logradouro or not tipo_logradouro or not bairro or not cidade or not cep or not tipo or not valor or not data_aquisicao:
+        return jsonify({
+                    "erro": "Campos obrigatórios: id, logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao"
+                }), 400
+
+    conexao = get_connection()
+    cursor = conexao.cursor
+    cursor.execute("INSERT INTO get_connection() (id,logradouro,tipo_logradouro,bairro,cidade,cep,tipo,valor,data_aquisicao) VALUES (?,?,?,?,?,?,?,?,?)", (id,logradouro,tipo_logradouro,bairro,cidade,cep,tipo,valor,data_aquisicao,))
+    conexao.commit()
+    imovel_id = cursor.lastrowid
+    cursor.close()
+    conexao.close()
+    return jsonify({
+        "id": imovel_id
+    }), 201
+
