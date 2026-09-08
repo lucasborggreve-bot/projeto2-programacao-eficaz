@@ -183,3 +183,12 @@ def test_atualizar_imovel_not_found(mock_conectar_banco, client):
     mock_conn.commit.assert_called_once()
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
+
+@patch('api.get_connection')
+def test_atualizar_imovel_erro(mock_conectar_banco, client):
+    response = client.put('/imovel/1', json={'logradouro': 'só isso tb nao da né'})
+
+    assert response.status_code == 400
+    assert response.get_json() == {'erro': 'Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao'}
+
+    mock_conectar_banco.assert_not_called()
