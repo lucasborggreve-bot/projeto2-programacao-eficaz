@@ -154,7 +154,7 @@ def test_atualizar_imovel_ok(mock_conectar_banco, client):
 
     mock_cursor.execute.assert_called_once_with(
         "UPDATE imoveis SET logradouro = ?, tipo_logradouro = ?, bairro = ?, cidade = ?, cep = ?, tipo = ?, valor = ?, data_aquisicao = ? WHERE id = ?",
-        ('Rafael Duarte', 'sei la', 'ulala', 'sp né', '01201', 'mansao', '000999', '2026-05-09', id)
+        ('Rafael Duarte', 'sei la', 'ulala', 'sp né', '01201', 'mansao', '000999', '2026-05-09', 1)
     )
     mock_conn.commit.assert_called_once()
     mock_cursor.close.assert_called_once()
