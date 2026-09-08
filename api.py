@@ -130,3 +130,6 @@ def atualiza_imovel(imoveis_id):
     return jsonify({
         "mensagem": "Imóvel atualizado com sucesso"
     }), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
