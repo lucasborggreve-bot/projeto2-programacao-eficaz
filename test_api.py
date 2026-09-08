@@ -103,3 +103,36 @@ def test_listar_imovel_por_id_erro(mock_conectar_banco, client):
     mock_cursor.fetchone.assert_called_once()
     mock_cursor.close.assert_called_once()
     mock_conn.close.assert_called_once()
+
+@patch('api.get_connection')
+def test_adicionar_imovel_ok(mock_conectar_banco, client):
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_conn.cursor.return_value = mock_cursor
+
+    mock_cursor.lastrowid = 10
+
+    mock_conectar_banco.return_value = mock_conn
+
+    payload = {'logradouro': 'Nicole Common', 'tipo_logradouro': 'Travessa', 'bairro': 'Lake Danielle', 'cidade': 'Judymouth', 'cep': '85184', 'tipo': 'casa em condominio', 'valor': '488424', 'data_aquisicao': '2017-07-29'}
+    response = client.post('/imoveis', json=payload)
+
+    assert response.status_code == 201
+    assert response.get_json() == {'id': 10}
+
+    mock_cursor.execute.assert_caleld_once_with(
+        "INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) values (?, ?, ?, ?, ?, ?, ?, ?)",
+        ('Nicole Common', 'Travessa', 'Lake Danielle', 'Judymouth', '85184', 'casa em condominio', '488424', '2017-07-29')
+    )
+    mock_conn.commit.assert_called_once()
+    mock_cursor.close.assert_called_once()
+    mock_conn.close.assert_called_once()
+
+@patch('api.get_connection')
+def test_adicionar_imovel_erro(mock_conectar_banco, client):
+    response = client.post('/imoveis', json={'logradouro': 'blablabla'})
+
+    assert response.status_code == 400
+    assert response.get_json() == {'erro': 'Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao'}
+
+    mock_conectar_banco.assert_not_called()
