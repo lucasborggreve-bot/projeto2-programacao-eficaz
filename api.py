@@ -11,6 +11,7 @@ def listar_imoveis():
     cursor = conexao.cursor()
     cursor.execute("SELECT * FROM imoveis")
     imoveis = cursor.fetchall()
+    lista_imoveis = []
     for imovel in imoveis:
 
         im =        {'id':imovel[0], 
@@ -22,9 +23,10 @@ def listar_imoveis():
                     "tipo" : imovel[6],
                     "valor": imovel[7],
                     "data_aquisicao" : imovel[8] }
+        lista_imoveis.append(im)
     cursor.close()
     conexao.close()
 
-    return jsonify(im), 200
+    return jsonify(lista_imoveis), 200
     
 
