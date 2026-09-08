@@ -92,4 +92,3 @@ def criar_imovel():
     return jsonify({
         "id": imovel_id
     }), 201
-
