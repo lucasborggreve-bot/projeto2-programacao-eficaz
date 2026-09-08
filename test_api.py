@@ -121,7 +121,7 @@ def test_adicionar_imovel_ok(mock_conectar_banco, client):
     assert response.get_json() == {'id': 10}
 
     mock_cursor.execute.assert_called_once_with(
-        "INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) values (?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO imoveis (logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         ('Nicole Common', 'Travessa', 'Lake Danielle', 'Judymouth', '85184', 'casa em condominio', '488424', '2017-07-29')
     )
     mock_conn.commit.assert_called_once()
