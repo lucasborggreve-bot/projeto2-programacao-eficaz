@@ -136,3 +136,26 @@ def test_adicionar_imovel_erro(mock_conectar_banco, client):
     assert response.get_json() == {'erro': 'Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao'}
 
     mock_conectar_banco.assert_not_called()
+
+@patch('api.get_connection')
+def test_atualizar_imovel_ok(mock_conectar_banco, client):
+    mock_conn = MagicMock()
+    mock_cursor = MagicMock()
+    mock_conn.cursor.return_value = mock_cursor
+
+    mock_cursor.rowcount = 1
+    mock_conectar_banco.return_value = mock_conn
+
+    payload = {'logradouro': 'Rafael Duarte', 'tipo_logradouro': 'sei la', 'bairro': 'ulala', 'cidade': 'sp né', 'cep': '01201', 'tipo': 'mansao', 'valor': '000999', 'data_aquisicao': '2026-05-09'}
+    response = client.put('/imoveis/1', json=payload)
+
+    assert response.status_code == 200
+    assert response.get_json() == {'mensagem': 'Imóvel atualizado com sucesso'}
+
+    mock_cursor.execute.assert_called_once_with(
+        "UPDATE imoveis SET logradouro = ?, tipo_logradouro = ?, bairro = ?, cidade = ?, cep = ?, tipo = ?, valor = ?, data_aquisicao = ? WHERE id = ?",
+        ('Rafael Duarte', 'sei la', 'ulala', 'sp né', '01201', 'mansao', '000999', '2026-05-09', id)
+    )
+    mock_conn.commit.assert_called_once()
+    mock_cursor.close.assert_called_once()
+    mock_conn.close.assert_called_once()
