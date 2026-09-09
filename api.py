@@ -96,9 +96,7 @@ def criar_imovel():
 def atualiza_imovel(imoveis_id):
     dados = request.get_json(silent = True)
     if not dados:
-        return jsonify({
-            "erro": "Campos obrigatórios: name, email, phone"
-        }), 400
+        return jsonify({'erro': 'Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao'}), 400
 
     logradouro = dados.get("logradouro")
     tipo_logradouro = dados.get("tipo_logradouro")
@@ -111,7 +109,7 @@ def atualiza_imovel(imoveis_id):
 
     if not logradouro or not tipo_logradouro or not bairro or not cidade or not cep or not tipo or not valor or not data_aquisicao:
             return jsonify({
-                        "erro": "Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao"
+                        'erro': 'Campos obrigatórios: logradouro, tipo_logradouro, bairro, cidade, cep, tipo, valor, data_aquisicao'
                     }), 400
 
     conexao = get_connection()
@@ -130,6 +128,35 @@ def atualiza_imovel(imoveis_id):
     return jsonify({
         "mensagem": "Imóvel atualizado com sucesso"
     }), 200
+
+@app.route("/imoveis/<int:imoveis_id>", methods=["DELETE"])
+
+def excluir_imovel(imoveis_id):
+    conexao = get_connection()
+    cursor = conexao.cursor()
+
+    cursor.execute(
+        "DELETE FROM imoveis WHERE id = %s",
+        (imoveis_id,)
+    )
+
+    linhas_excluidas = cursor.rowcount
+
+   
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+
+    if linhas_excluidas == 0:
+        return jsonify({
+            'erro': 'Imóvel não encontrado'
+        }), 404
+
+    return jsonify({
+        'mensagem': 'Imóvel removido com sucesso'
+    }), 200
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
