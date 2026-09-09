@@ -224,7 +224,7 @@ def test_remover_imovel_not_found(mock_conectar_banco, client):
     mock_cursor.rowcount = 0
     mock_conectar_banco.return_value = mock_conn
 
-    response = client.delete('/imovel/999')
+    response = client.delete('/imoveis/999')
 
     assert response.status_code == 404
     assert response.get_json() == {'erro': 'Imóvel não encontrado'}
