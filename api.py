@@ -187,6 +187,38 @@ def busca_imovel_tipo(imoveis_tipo):
 
     return jsonify(lista_imoveis), 200
 
+@app.route("/imoveis/cidade/<imoveis_cidade>", methods=["GET"])
+def busca_imovel_cidade(imoveis_cidade):
+    conexao = get_connection()
+    cursor = conexao.cursor()
+    cursor.execute("SELECT * FROM imoveis WHERE cidade = %s", (imoveis_cidade,))
+    imoveis = cursor.fetchall()
+    if not imoveis:
+                    cursor.close()
+                    conexao.close()
+            
+                    return jsonify({
+                        "erro": "Nenhum imóvel encontrado"
+                    }), 404
+    lista_imoveis = []
+    for imovel in imoveis:
+
+        im = {'id':imovel[0], 
+            'logradouro': imovel[1],
+            "tipo_logradouro": imovel[2],
+            "bairro" : imovel[3],
+            "cidade": imovel[4],
+            "cep": imovel[5],
+            "tipo" : imovel[6],
+            "valor": imovel[7],
+            "data_aquisicao" : imovel[8] }
+        lista_imoveis.append(im)
+    cursor.close()
+    conexao.close()
+
+    return jsonify(lista_imoveis), 200
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
