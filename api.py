@@ -55,8 +55,8 @@ def listar_imovel(imoveis_id):
             "erro": "Imóvel não encontrado"
         }), 404
     lista_imovel = dic_imovel(imovel)
-    conexao.close()
     cursor.close()
+    conexao.close()
     return jsonify(lista_imovel), 200
     
 @app.route("/imoveis", methods=["POST"])
